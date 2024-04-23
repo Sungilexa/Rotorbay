@@ -1,0 +1,106 @@
+/* Réinitialisation des styles par défaut */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Styles généraux */
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #111;
+    color: #fff;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+  
+  header {
+    background-color: #111;
+    padding: 20px 0;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+  }
+  
+  nav ul li {
+    margin-right: 20px;
+  }
+  
+  nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  nav ul li a:hover {
+    color: #ff5500;
+  }
+  
+  h1, h3 {
+    margin-bottom: 20px;
+    color: #ff5500;
+  }
+  
+  ul {
+    margin-bottom: 20px;
+    list-style-type: disc;
+  }
+
+  .helicopter-details {
+    background-color: #222;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    margin-bottom: 40px;
+  }
+  
+  .helicopter-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .helicopter-image {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .helicopter-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .helicopter-description {
+    flex: 2;
+    padding: 20px;
+  }
+  
+  .helicopter-description ul {
+    list-style-type: none;
+    padding-left: 20px;
+  }
+  
+  .helicopter-description ul li {
+    margin-bottom: 10px;
+  }
+  
+  .helicopter-description h3 {
+    margin-bottom: 10px;
+    color: #ff5500;
+  }
+  
+  .helicopter-description p {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #ff5500;
+  }
+  

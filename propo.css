@@ -1,0 +1,136 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    font-family: 'Tw Cen MT', sans-serif;
+}
+
+.container {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/piste.jpeg');
+    background-size: cover;
+    background-position: center;
+    padding: 0 8%;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 5px 0;
+}
+
+nav .logo {
+    width: 120px;
+    cursor: pointer;
+}
+
+nav .cart {
+    width: 40px;
+    cursor: pointer;
+}
+
+nav ul {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+    padding-right: 40px;
+    text-align: right;
+    list-style-type: none;
+}
+
+ul li {
+    margin-right: 10px;
+}
+
+ul li a {
+    position: relative;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+}
+
+ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    transform: translateX(-50%) translateY(-5px);
+    height: 3px;
+    background: #ffa400;
+    transition: 0.3s;
+}
+
+ul li a:hover::after {
+    width: 38%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 20px; /* Ajout de l'espace vertical entre les éléments */
+}
+
+
+
+
+
+.address {
+    color: rgb(255, 255, 255);
+    padding: 20px;
+    margin-bottom: 20px;
+    max-width: 500px;
+    margin: auto; /* Centrer horizontalement */
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+
+
+.address h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.address p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.map-container {
+    display: flex;
+    justify-content: center; /* Centrer horizontalement */
+}
+
+
+.map-container iframe {
+    width: 400px;
+    height: 300px;
+    border: 0;
+}
+
+.footer {
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 14px;
+}

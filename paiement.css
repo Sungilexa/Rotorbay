@@ -1,0 +1,126 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  font-family: 'Tw Cen MT', sans-serif;
+}
+
+.container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/panie.webp');
+  background-size: cover;
+  background-position: center;
+  padding: 0 8%;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 5px 0;
+}
+
+nav .logo {
+  width: 120px;
+  cursor: pointer;
+}
+
+nav .cart {
+  width: 40px;
+  cursor: pointer;
+}
+
+nav ul {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  padding-right: 40px;
+  text-align: right;
+  list-style-type: none;
+}
+
+ul li {
+  margin-right: 10px;
+}
+
+ul li a {
+  position: relative;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+}
+
+ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  transform: translateX(-50%) translateY(-5px);
+  height: 3px;
+  background: #ffa400;
+  transition: 0.3s;
+}
+
+ul li a:hover::after {
+  width: 38%;
+}
+
+.site-container {
+  position: absolute;
+  bottom: 10%;
+  color: #fff;
+}
+
+.footer {
+  padding: 20px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.footer p {
+  margin: 0;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.paiement {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  text-align: center;
+}
+
+.paiement h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.paiement p {
+  font-size: 20px;
+  color: #16b824;
+  font-weight: bold;
+}
+
+.image-produit {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.details {
+  flex: 1;
+}
