@@ -1,3 +1,4 @@
+<!-- catalogue.php -->
 <?php
 session_start();
 ?>
@@ -9,100 +10,67 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogue</title>
     <link rel="stylesheet" href="catalogue.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="container">
-      <nav>
-          <a href="accueil.php">
-              <img src="images/Hélicramptés.png" alt="" class="logo" />
-          </a>
-          <ul>
-              <li><a href="accueil.php">Accueil</a></li>
-              <li><a href="propo.php">À propos</a></li>
-              <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                  <li><a href="espace_client.php">Espace client</a></li>
-                  <li><a href="logout.php">Deconnexion</a></li>
-              <?php else: ?>
-                  <li><a href="loginform.php">Login</a></li>
-              <?php endif; ?>
-          </ul>
-          <a href="panier.php">
-              <img src="images/cart.png" alt="Panier" class="cart" />
-          </a>
-      </nav>
+    <?php include 'header.php'; 
+    include 'session.php';?>
 
     <div class="catalogue">
-      <h2>Catalogue des hélicoptères</h2>
-        <div class="helico">
-            <div class="image-container">
-                <img src="images/produit1.png" alt="TIGRE" class="image-helico">
+      <h3>Catalogue des hélicoptères</h3>
+      <div class="card-deck">
+        <div class="card text-center">
+          <a href="milmi24.php">
+            <div class="card-header">
+              En stock
             </div>
-            <div class="details">
-                <span class="nom">TIGRE</span><br>
-                <span class="prix">Prix: 120000000 €</span>
-                <span class="description"><br>
-                    Modèle : H225M Caracal<br>
-                    Année : 2010<br>
-                    Moteur : Turbomeca Makila 2A1<br>
-                    Capacité : 10 passagers<br>
-                    Autonomie : 1 325 km
-                </span>
+            <img class="card-img-top" src="images/milmi24.jpg" alt="Card image">
+            <div class="card-body">
+              <p class="card-text text-muted">Hélicoptère de combat</p>
+              <a href="#"><h5 class="card-title">Mil-mi 24</h5></a>
+              <div class="card-footer">
+                15.000.000$
+              </div>
             </div>
-            <div class="btnAddDiv">
-                <label for="quantite">Quantité: </label>
-                <input type="number" class="quantiteBtn" min="0" max="99" value="0">
-                <button class="addPanierBtn" onclick="ajouterPanier()">Ajouter au panier</button>
-            </div>
+          </a>
         </div>
-
-        <div class="helico">
-            <div class="image-container">
-                <img src="images/produit2.png" alt="AIRBUS H145" class="image-helico">
+        <div class="card text-center">
+          <a href="sikorskys92.php">
+            <div class="card-header">
+                En stock
             </div>
-            <div class="details">
-                <span class="nom">AIRBUS H145</span><br>
-                <span class="prix">Prix: 25000000 €</span>
-                <span class="description"><br>
-                    Modèle : Falcon Airbus H145<br>
-                    Année : 2022<br>
-                    Moteur : Turbine XYZ-T2000<br>
-                    Capacité : 4 passagers<br>
-                    Autonomie : 500 km
-                </span>
+            <img class="card-img-top" src="images/sikorskys92.jpg" alt="Card image">
+            <div class="card-body">
+              <p class="card-text text-muted">Hélicoptère civil</p>
+              <a href="#"><h5 class="card-title">Sikorsky S-92</h5></a>
+              <div class="card-footer">
+                27.000.000$
+              </div>
             </div>
-            <div class="btnAddDiv">
-                <label for="quantite">Quantité: </label>
-                <input type="number" class="quantiteBtn" min="0" max="99" value="0">
-                <button class="addPanierBtn" onclick="ajouterPanier()">Ajouter au panier</button>
-            </div>
+          </a>
         </div>
-
-        <div class="helico">
-            <div class="image-container">
-                <img src="images/produit3.png" alt="H160" class="image-helico">
+        <div class="card text-center">
+          <a href="h225mcaracal.php">
+            <div class="card-header">
+                En stock
             </div>
-            <div class="details">
-                <span class="nom">H160</span><br>
-                <span class="prix">Prix: 65000000 €</span>
-                <span class="description"><br>
-                    Modèle : H160<br>
-                    Année : 2023<br>
-                    Moteur : Turbomeca Makila 2A1<br>
-                    Capacité : 8 - 10 passagers<br>
-                    Autonomie : 980 km
-                </span>
+            <img class="card-img-top" src="images/caracalh225m.jpg" alt="Card image">
+            <div class="card-body">
+              <p class="card-text text-muted">Hélicoptère de combat</p>
+              <a href="#"><h5 class="card-title">H225M Caracal</h5></a>
+              <div class="card-footer">
+                22.000.000$
+              </div>
             </div>
-            <div class="btnAddDiv">
-                <label for="quantite">Quantité: </label>
-                <input type="number" class="quantiteBtn" min="0" max="99" value="0">
-                <button class="addPanierBtn">Ajouter au panier</button>
-            </div>
+          </a>
         </div>
+      </div>
     </div>
-
+        
     <footer class="footer">
-      <p>© 2023 WoippyServices inc.</p>
+        <p>© 2023 Bladespin aircraft inc.</p>
     </footer>
   </div>
 <script src="dynamique.js"></script>

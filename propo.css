@@ -8,69 +8,22 @@
     font-family: 'Tw Cen MT', sans-serif;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 .container {
     position: relative;
     height: 100vh;
-    width: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/piste.jpeg');
-    background-size: cover;
-    background-position: center;
-    padding: 0 8%;
-}
-
-nav {
+    width: 100vw; /* Utiliser la largeur complète de la fenêtre */
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/piste.jpeg') no-repeat center center / cover;
+    padding: 0;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 5px 0;
-}
-
-nav .logo {
-    width: 120px;
-    cursor: pointer;
-}
-
-nav .cart {
-    width: 40px;
-    cursor: pointer;
-}
-
-nav ul {
-    display: flex;
-    justify-content: flex-end;
-    flex: 1;
-    padding-right: 40px;
-    text-align: right;
-    list-style-type: none;
-}
-
-ul li {
-    margin-right: 10px;
-}
-
-ul li a {
-    position: relative;
-    padding: 10px 20px;
-    text-decoration: none;
-    color: #fff;
-    font-size: 16px;
-}
-
-ul li a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 0;
-    transform: translateX(-50%) translateY(-5px);
-    height: 3px;
-    background: #ffa400;
-    transition: 0.3s;
-}
-
-ul li a:hover::after {
-    width: 38%;
+    flex-direction: column;
+    justify-content: center; /* Centrer verticalement */
+    align-items: center; /* Centrer horizontalement */
 }
 
 .content {
@@ -78,24 +31,18 @@ ul li a:hover::after {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
     gap: 20px; /* Ajout de l'espace vertical entre les éléments */
+    width: 100%;
 }
-
-
-
-
 
 .address {
     color: rgb(255, 255, 255);
     padding: 20px;
     margin-bottom: 20px;
     max-width: 500px;
-    margin: auto; /* Centrer horizontalement */
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center; /* Centrer le texte */
 }
-
-
 
 .address h2 {
     font-size: 18px;
@@ -112,7 +59,6 @@ ul li a:hover::after {
     display: flex;
     justify-content: center; /* Centrer horizontalement */
 }
-
 
 .map-container iframe {
     width: 400px;

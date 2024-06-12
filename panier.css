@@ -8,156 +8,191 @@
   font-family: 'Tw Cen MT', sans-serif;
 }
 
-.container {
-  position: relative;
-  height: 100vh;
+html, body {
   width: 100%;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/panie.webp');
-  background-size: cover;
-  background-position: center;
-  padding: 0 8%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/panier.jpg') no-repeat center center / cover;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  padding: 5px 0;
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0);
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  padding: 0 20px;
+  left: 0;
 }
 
 nav .logo {
-  width: 120px;
+  max-height: 50px;
   cursor: pointer;
 }
 
 nav .cart {
-  width: 30px;
+  max-height: 30px;
   cursor: pointer;
 }
 
 nav ul {
   display: flex;
-  justify-content: flex-end;
-  flex: 1;
-  padding-right: 40px;
-  text-align: right;
+  justify-content: center;
+  text-align: center;
   list-style-type: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
 }
 
 ul li {
-  margin-right: 10px;
+  margin: 0 20px;
 }
 
 ul li a {
   position: relative;
-  padding: 10px 20px;
+  padding: 10px 15px;
   text-decoration: none;
   color: #fff;
   font-size: 16px;
-}
-
-ul li a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 0;
-  transform: translateX(-50%) translateY(-5px);
-  height: 3px;
-  background: #ffa400;
-  transition: 0.3s;
 }
 
 ul li a:hover::after {
   width: 38%;
 }
 
-.site-container {
-  position: absolute;
-  bottom: 10%;
-  color: #fff;
+.card {
+    box-shadow: 0 1px 15px 1px rgba(52,40,104,.08);
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white !important;
+}
+
+.card-header,
+.card-body,
+.card-footer {
+    background-color: rgba(0, 0, 0, 0) !important;
+    color: white !important;
+}
+
+.table thead th,
+.table tbody td {
+    color: white !important;
+}
+
+.table {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #ffffff !important;
+}
+
+.table thead th {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.table tbody tr,
+.table tbody td {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.ui-product-color {
+    display: inline-block;
+    overflow: hidden;
+    margin: .144em;
+    width: .875rem;
+    height: .875rem;
+    border-radius: 10rem;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15) inset;
+    vertical-align: middle;
+}
+
+.ui-w-40 {
+    width: 40px !important;
+    height: auto;
+}
+
+.ui-w-200 {
+    width: 200px !important;
+    height: auto;
+}
+
+.media-body {
+    margin-left: 15px;
+}
+
+.media {
+    display: flex;
+    align-items: center;
 }
 
 .footer {
-  padding: 20px;
   text-align: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-
-.footer p {
-  margin: 0;
   color: #ffffff;
-  font-size: 14px;
+  flex-shrink: 0;
 }
 
-.panier {
-  max-width: 500px;
-  margin: 50px auto;
+.empty-cart-message {
+  display: none;
+  text-align: center;
+  margin-top: 20px;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
 }
 
-.panier h2 {
-  text-align: center;
-  margin-bottom: 20px;
+.text-white {
+    color: white !important;
 }
 
-.item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+.btn-primary,
+.btn-default {
+    color: white !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border-color: rgba(0, 0, 0, 0.7) !important;
 }
 
-.nom {
-  font-weight: bold;
+.label-muted {
+    color: white !important;
 }
 
-.prix {
-  color: #ff0000;
+#cart-table-container {
+    background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
-.prix-total {
-  font-weight: bold;
-  font-size: 18px;
+.form-control.text-center.update-quantity {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+    border: 1px solid #ffffff !important;
 }
 
-.total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.image-produit {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  margin-right: 10px;
-}
-
-.details {
-  flex: 1;
-}
-
-.bouton-valider {
-  display: block;
-  width: 200px;
-  margin: 20px auto;
-  padding: 10px 20px;
-  background-color: #ffa400;
-  color: #fff;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-.bouton-valider:hover {
-  background-color: #ff8500;
+/* New CSS Rule */
+.text-muted.font-weight-normal.m-0 {
+    color: white !important;
+    font-size: 18px !important;
 }

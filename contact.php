@@ -12,6 +12,7 @@ session_start();
 	</head>
 	<body>
 		<div class="container">
+        <?include 'session.php';?>
             <nav>
                 <a href="accueil.php">
                     <img src="images/Hélicramptés.png" alt="" class="logo" />

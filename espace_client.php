@@ -1,43 +1,75 @@
 <?php
-session_start();
+include 'header.php';
+include 'db_connection.php';
+
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
+
+    try {
+        // Connexion à la base de données
+        $db = Connexion();
+
+        // Récupérer les informations utilisateur
+        $stmt = $db->prepare("SELECT idUtilisateur FROM utilisateur WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $userId = $user['idUtilisateur'];
+
+        // Récupérer les commandes de l'utilisateur
+        $stmt = $db->prepare("SELECT numFacture, prixFacture, nomFacture FROM facture WHERE idUtilisateur = :userId");
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        echo 'Erreur : ' . $e->getMessage();
+    }
+}
 ?>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Espace client</title>
     <link rel="stylesheet" type="text/css" href="espace_client.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
-<nav>
-    <a href="accueil.php">
-        <img src="images/Hélicramptés.png" alt="" class="logo" />
-    </a>
-    <ul>
-        <li><a href="accueil.php">Accueil</a></li>
-        <li><a href="propo.php">À propos</a></li>
-        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-            <li><a href="espace_client.php">Espace client</a></li>
-            <li><a href="logout.php">Deconnexion</a></li>
+    <div class="content">
+        <?php if (isset($_SESSION['email'])): ?>
+            <div class="welcome-banner">Bienvenue sur votre espace, <?php echo $_SESSION['email']; ?> !</div>
+
+            <table class="table table-bordered mt-4">
+                <thead>
+                    <tr>
+                        <th>N° de commande</th>
+                        <th>Montant</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($orders)): ?>
+                        <?php foreach ($orders as $order): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($order['numFacture']); ?></td>
+                                <td><?php echo htmlspecialchars($order['prixFacture']); ?> $</td>
+                                <td><?php echo htmlspecialchars($order['nomFacture']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="3">Aucune commande passée.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         <?php else: ?>
-            <li><a href="loginform.php">Login</a></li>
+            <p>Vous devez être connecté pour voir cette page.</p>
         <?php endif; ?>
-    </ul>
-    <a href="panier.php">
-        <img src="images/cart.png" alt="Panier" class="cart" />
-    </a>
-</nav>
+    </div>
 </div>
-<?php
-if (isset($_SESSION['email'])) {
-    echo '<div class="welcome-banner">Bienvenue sur votre espace, ' . $_SESSION['email'] . ' !</div>';
-}
-?>
-
-
 </body>
 </html>

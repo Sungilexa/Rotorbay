@@ -1,0 +1,66 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    font-family: 'Tw Cen MT', sans-serif;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between; /* Répartir les éléments */
+    align-items: center;
+    width: 100%;
+    height: 60px; /* Hauteur fixe pour le header */
+    background-color: rgba(0, 0, 0, 0.5); /* Pour plus de visibilité */
+    position: fixed; /* Fixer le header en haut de la page */
+    top: 0;
+    z-index: 1000; /* S'assurer que le header est au-dessus des autres éléments */
+    padding: 0 20px; /* Assurer un padding horizontal cohérent */
+    left: 0; /* S'assurer que le header commence à 0 sur la gauche */
+}
+
+nav .logo {
+    max-height: 50px; /* Assurer que le logo ne dépasse pas du header */
+    cursor: pointer;
+}
+
+nav .cart {
+    max-height: 30px; /* Taille du panier ajustée pour le header */
+    cursor: pointer;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center; /* Centrer les éléments de la liste */
+    text-align: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    flex: 1; /* Permettre à la liste de prendre l'espace disponible */
+}
+
+ul li {
+    margin: 0 20px; /* Ajuster l'écart entre les éléments */
+}
+
+ul li a {
+    position: relative;
+    padding: 10px 15px; /* Ajuster le padding des liens */
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+}
+
+ul li a:hover::after {
+    width: 38%;
+}

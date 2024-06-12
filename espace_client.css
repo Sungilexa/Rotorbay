@@ -1,5 +1,9 @@
 body {
     background-image: url('images/bg_client.jpg');
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    padding: 0;
 }
 
 *,
@@ -14,62 +18,84 @@ body {
 
 .container {
     position: relative;
-    height: 15vh;
+    height: 100vh; /* Full viewport height */
     width: 100%;
-    background-size: 100% auto;
-    background-position: center;
-    padding: 0 8%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Aligner en haut */
+    align-items: center; /* Centrer horizontalement */
+    padding: 0;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Ajout de l'espace vertical entre les éléments */
+    width: 100%;
+    margin-top: 80px; /* Pour ne pas chevaucher le header */
+}
+
+.footer {
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 14px;
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    padding: 5px 0;
+    width: 100%;
+    height: 60px; /* Hauteur fixe pour le header */
+    background-color: rgba(0, 0, 0, 0.5); /* Pour plus de visibilité */
+    position: fixed; /* Fixer le header en haut de la page */
+    top: 0;
+    z-index: 1000; /* S'assurer que le header est au-dessus des autres éléments */
+    padding: 0 20px; /* Assurer un padding horizontal cohérent */
+    left: 0; /* S'assurer que le header commence à 0 sur la gauche */
 }
 
 nav .logo {
-    width: 120px;
+    max-height: 50px; /* Assurer que le logo ne dépasse pas du header */
     cursor: pointer;
 }
 
 nav .cart {
-    width: 30px;
+    max-height: 30px; /* Taille du panier ajustée pour le header */
     cursor: pointer;
 }
 
 nav ul {
     display: flex;
-    justify-content: flex-end;
-    flex: 1;
-    padding-right: 40px;
-    text-align: right;
+    justify-content: center; /* Centrer les éléments de la liste */
+    text-align: center;
     list-style-type: none;
+    margin: 0;
+    padding: 0;
+    flex: 1; /* Permettre à la liste de prendre l'espace disponible */
 }
 
 ul li {
-    margin-right: 10px;
+    margin: 0 20px; /* Ajuster l'écart entre les éléments */
 }
 
 ul li a {
     position: relative;
-    padding: 10px 20px;
+    padding: 10px 15px; /* Ajuster le padding des liens */
     text-decoration: none;
     color: #fff;
     font-size: 16px;
-}
-
-ul li a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 0;
-    transform: translateX(-50%) translateY(-5px);
-    height: 3px;
-    background: #ffa400;
-    transition: 0.3s;
 }
 
 ul li a:hover::after {
@@ -79,8 +105,16 @@ ul li a:hover::after {
 .welcome-banner {
     background-color: rgba(255, 255, 255, 0.5);
     border: 1px solid #ddd;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 15px;
+    margin-top: 80px; /* Pour ne pas chevaucher le header */
     text-align: center;
     border-radius: 5px;
+    width: calc(100% - 40px); /* Prendre toute la largeur de l'écran avec une marge de 20px de chaque côté */
+    max-width: none;
+    width: 100%;
+    border-radius: 0px;
+    color:#fff;
+    background-color: black;
+    border-color: black;
+    margin-top: 0px;
 }

@@ -1,154 +1,187 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  outline: none;
-  font-family: 'Tw Cen MT', sans-serif;
-  font-size: 18px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    font-family: 'Tw Cen MT', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-style: sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
 }
 
 .container {
   position: relative;
-  height: 100vh;
-  width: 100%;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/panie.webp');
-  background-size: cover;
-  background-position: center;
-  padding: 0 8%;
-}
-
-nav {
+  min-height: 100vh; /* Utiliser la hauteur minimale complète de la fenêtre */
+  width: 100vw; /* Utiliser la largeur complète de la fenêtre */
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/Background.jpg') no-repeat center center;
+  background-size: cover; /* Couvrir toute la fenêtre */
+  padding: 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 5px 0;
-}
-
-nav .logo {
-  width: 120px;
-  cursor: pointer;
-}
-
-nav .cart {
-  width: 30px;
-  cursor: pointer;
-}
-
-nav ul {
-  display: flex;
-  justify-content: flex-end;
-  flex: 1;
-  padding-right: 40px;
-  text-align: right;
-  list-style-type: none;
-}
-
-ul li {
-  margin-right: 10px;
-}
-
-ul li a {
-  position: relative;
-  padding: 10px 20px;
-  text-decoration: none;
-  color: #fff;
-  font-size: 18px;
-}
-
-ul li a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 0;
-  transform: translateX(-50%) translateY(-5px);
-  height: 3px;
-  background: #ffa400;
-  transition: 0.3s;
-}
-
-ul li a:hover::after {
-  width: 38%;
-}
-
-.site-container {
-  position: absolute;
-  bottom: 10%;
-  color: #fff;
-}
-
-.footer {
-  padding: 20px;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
-
-.footer p {
+  flex-direction: column;
+  justify-content: center; /* Centrer verticalement */
+  align-items: center; /* Centrer horizontalement */
   margin: 0;
-  color: #ffffff;
-  font-size: 14px;
+  max-width: 100% !important;
 }
 
 .catalogue {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
+    max-width: 1000px;
+    width: 100%;
+    margin: 80px auto; /* Assurer un espace en haut pour le header fixe */
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    color: #ffffff;
 }
 
-.catalogue h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
+.catalogue h3 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.helico {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+.card-deck {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    
 }
 
-.image-container {
-  width: 200px;
-  height: 120px;
-  margin-right: 20px;
-  overflow: hidden;
+.card {
+    max-width: 16rem;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    
 }
 
-.image-helico {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s;
+.card:hover {
+    box-shadow: 1px 2px 10px lightgray;
+    transform: translateY(-5px);
 }
 
-.image-container:hover .image-helico {
-  transform: scale(1.2);
+.card a {
+    text-decoration: none;
+    color: inherit;
 }
 
-.details {
-  flex: 1;
+.card-header,
+.card-footer {
+    background-color: white;
+    padding: 10px;
 }
 
-.nom {
-  font-weight: bold;
-  margin-bottom: 5px;
+.card-header {
+    font-size: 13px;
+    color: gray;
 }
 
-.description {
-  margin-bottom: 10px;
-  font-size: 16px;
+.text-muted {
+    font-size: 11px;
 }
 
-.prix {
-  color: #ff0000;
-  font-weight: bold;
-  font-size: 20px;
+.card-footer {
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #fff!important;
+    border-top-color: #fff!important;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0px !important;
+}
+
+.card-title {
+    margin: 10px 0;
+}
+
+.footer {
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 60px; /* Hauteur fixe pour le header */
+    background-color: rgba(0, 0, 0, 0.5); /* Pour plus de visibilité */
+    position: fixed; /* Fixer le header en haut de la page */
+    top: 0;
+    z-index: 1000; /* S'assurer que le header est au-dessus des autres éléments */
+    padding: 0 20px; /* Assurer un padding horizontal cohérent */
+    left: 0; /* S'assurer que le header commence à 0 sur la gauche */
+}
+
+nav .logo {
+    max-height: 50px; /* Assurer que le logo ne dépasse pas du header */
+    cursor: pointer;
+}
+
+nav .cart {
+    max-height: 30px; /* Taille du panier ajustée pour le header */
+    cursor: pointer;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center; /* Centrer les éléments de la liste */
+    text-align: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    flex: 1; /* Permettre à la liste de prendre l'espace disponible */
+}
+
+ul li {
+    margin: 0 20px; /* Ajuster l'écart entre les éléments */
+}
+
+ul li a {
+    position: relative;
+    padding: 10px 15px; /* Ajuster le padding des liens */
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+}
+
+ul li a:hover::after {
+    width: 38%;
 }

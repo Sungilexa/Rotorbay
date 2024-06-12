@@ -1,6 +1,3 @@
-<?php
-session_start();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,87 +6,59 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier</title>
     <link rel="stylesheet" href="panier.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
-    <nav>
-        <a href="accueil.php">
-            <img src="images/Hélicramptés.png" alt="" class="logo" />
-        </a>
-        <ul>
-            <li><a href="accueil.php">Accueil</a></li>
-            <li><a href="propo.php">À propos</a></li>
-            <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                <li><a href="espace_client.php">Espace client</a></li>
-                <li><a href="logout.php">Deconnexion</a></li>
-            <?php else: ?>
-                <li><a href="loginform.php">Login</a></li>
-            <?php endif; ?>
-        </ul>
-        <a href="panier.php">
-            <img src="images/cart.png" alt="Panier" class="cart" />
-        </a>
-    </nav>
+    <?php include 'header.php'; ?>
 
-    <div class="panier">
-        <h2>Panier</h2>
-        <form method="POST" action="paiement.php">
-            <?php
-            //Tableau des produits dans le panier
-            $panier = [
-                ['id' => 1, 'nom' => 'TIGRE <br> <br>', 'prix' => 120000000, 'image' => 'images/produit1.png', 'quantite' => 1],
-                ['id' => 2, 'nom' => 'AIRBUS H145 <br> <br>', 'prix' => 25000000, 'image' => 'images/produit2.png', 'quantite' => 1],
-                ['id' => 3, 'nom' => 'H160 <br> <br>', 'prix' => 65000000, 'image' => 'images/produit3.png', 'quantite' => 1]
-            ];
-
-            //Vérifier si une quantité a été mise à jour
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                if (isset($_POST['modifier'])) {
-                    foreach ($_POST['modifier'] as $produitId => $nouvelleQuantite) {
-                        // Rechercher le produit dans le panier
-                        foreach ($panier as &$item) {
-                            if ($item['id'] == $produitId) {
-                                $item['quantite'] = max(0, min(5, $nouvelleQuantite)); // Assurer que la quantité est entre 0 et 5
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach ($panier as $item) {
-                echo '<div id="item-' . $item['id'] . '" class="item">';
-                echo '<img src="' . $item['image'] . '" alt="' . $item['nom'] . '" class="image-produit">';
-                echo '<div class="details">';
-                echo '<span class="nom">' . $item['nom'] . '</span>';
-                echo '<span class="prix">' . $item['prix'] . ' €</span>';
-                echo '<input type="number" name="modifier[' . $item['id'] . ']" value="' . $item['quantite'] . '" min="0" max="5">';
-                echo '</div>';
-                echo '</div>';
-            }
-            ?>
-            <div class="total">
-                <span>Total :</span>
-                <span class="prix-total">
-            <?php
-            //Calculer le total du panier
-            $total = 0;
-            foreach ($panier as $item) {
-                $total += $item['prix'] * $item['quantite'];
-            }
-            echo $total . ' €';
-            ?>
-          </span>
+    <div class="content">
+        <div class="container px-3 my-5 clearfix">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Shopping Cart</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" id="cart-table-container">
+                        <table class="table table-bordered m-0" id="cart-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center py-3 px-4" style="min-width: 400px;">Product Name &amp; Details</th>
+                                    <th class="text-right py-3 px-4" style="width: 100px;">Price</th>
+                                    <th class="text-center py-3 px-4" style="width: 120px;">Quantity</th>
+                                    <th class="text-right py-3 px-4" style="width: 100px;">Total</th>
+                                    <th class="text-center align-middle py-3 px-0" style="width: 40px;"><a href="#" class="shop-tooltip float-none text-light" title="Clear cart" id="clear-cart"><i class="ion ion-md-trash"></i></a></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-items">
+                                <!-- Cart items will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="empty-cart-message" class="empty-cart-message" style="display:none;">
+                        Votre panier est vide !
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+                        <div class="text-right mt-4 mr-5">
+                            <label class="text-muted font-weight-normal m-0">Total price</label>
+                            <div class="text-large"><strong id="total-price">$0</strong></div>
+                        </div>
+                    </div>
+                    <div class="float-right">
+                        <button type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3" onclick="window.location.href='catalogue.php';">Back to shopping</button>
+                        <button type="button" class="btn btn-lg btn-primary mt-2" id="checkout-button">Checkout</button>
+                    </div>
+                </div>
             </div>
-            <button type="submit" name="valider" class="bouton-valider">Valider la commande</button>
-        </form>
+        </div>
     </div>
 
     <footer class="footer">
-        <p>© 2023 WoippyServices inc.</p>
+        <p>© 2023 Bladespin aircraft inc.</p>
     </footer>
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="panierdynamique.js"></script>
 </body>
 </html>
