@@ -55,7 +55,7 @@ nav .cart {
 }
 
 nav ul {
-    display: flex;
+    display: contents;
     justify-content: center; /* Centrer les éléments de la liste */
     text-align: center;
     list-style-type: none;

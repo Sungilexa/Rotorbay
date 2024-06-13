@@ -1,10 +1,17 @@
 <?php
-session_start();
 include 'db_connection.php'; // Inclure le fichier contenant la fonction Connexion
+
+// Définir les paramètres des cookies de session avant de démarrer la session
+session_set_cookie_params(12 * 60 * 60); // Définir un cookie de session qui expire après 12 heures
+
+// Démarrer la session si elle n'est pas déjà active
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $password = password_hash($_POST['password'], PASSWORD_ARGON2ID);
 
     try {
         $db = Connexion();
@@ -17,16 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['logged_in'] = true;
         $_SESSION['email'] = $email;
 
-        // Définir un cookie de session qui expire après 12 heures
-        session_set_cookie_params(12 * 60 * 60);
+        // Regénérer l'ID de session pour des raisons de sécurité
         session_regenerate_id(true);
 
         echo 'success';
         exit();
     } catch (Exception $e) {
-        echo 'Erreur : ' . $e->getMessage();
+        // En cas d'erreur, rediriger vers inscription_echec.php
+        header('Location: inscription_echec.php');
+        exit();
     }
-    exit();
 }
 ?>
 <!doctype html>
@@ -44,8 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <div class="container">
-    <?php include 'header.php'; 
-    include 'session.php';?>
+    <?php include 'header.php'; ?>
     <div class="content">
         <div class="form-container">
             <form id="signupForm" method="post">
@@ -63,8 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" name="confirm_password" class="form-control" id="confirmSignupPassword" placeholder="Confirmez votre mot de passe">
                 </div>
                 <div class="submitDiv">
-                    <button type="button" class="btn btn-primary" id="SignupFormBtn">S'inscrire</button>
+                    <button type="submit" class="btn btn-primary" id="SignupFormBtn">S'inscrire</button>
                 </div>
+                <?php if (isset($error_message)): ?>
+                    <div class="alert alert-danger mt-3"><?php echo $error_message; ?></div>
+                <?php endif; ?>
             </form>
             <div id="responseMessage"></div>
         </div>

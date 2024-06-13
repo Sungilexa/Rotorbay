@@ -1,6 +1,9 @@
 <?php
-include 'session.php';
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
+<link rel="stylesheet" type="text/css" href="header.css"> <!-- Inclure le CSS du header -->
 <nav>
     <a href="accueil.php">
         <img src="images/Hélicramptés.png" alt="Logo" class="logo" />

@@ -1,5 +1,4 @@
 <?php
-session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,8 +12,7 @@ session_start();
 </head>
 <body>
     <div class="container">
-        <?php include 'header.php'; 
-        include 'session.php';?>
+        <?php include 'header.php'; ?>
         <div class="content">
             <div class="address">
                 <h2>Adresse :</h2>

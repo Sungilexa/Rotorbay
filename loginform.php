@@ -1,5 +1,4 @@
 <?php
-session_start();
 include 'db_connection.php'; // Inclure le fichier contenant la fonction Connexion
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

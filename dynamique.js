@@ -17,14 +17,14 @@ $(document).ready(function(){
                 password: password
             },
             success: function(response) {
-                if (response === 'success') {
+                if (response.trim() === 'success') {
                     window.location.href = 'inscription_reussie.php';
                 } else {
-                    $('#responseMessage').text(response);
+                    window.location.href = 'inscription_echec.php';
                 }
             },
             error: function() {
-                $('#responseMessage').text("Erreur lors de l'inscription");
+                window.location.href = 'inscription_echec.php';
             }
         });
     });
@@ -41,7 +41,7 @@ $(document).ready(function(){
                 password: password
             },
             success: function(response) {
-                if (response === 'success') {
+                if (response.trim() === 'success') {
                     window.location.href = 'accueil.php';
                 } else {
                     $('#responseMessage').text(response);
@@ -80,6 +80,4 @@ $(document).ready(function(){
             }
         });
     });
-
-
 });
