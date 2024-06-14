@@ -1,0 +1,6 @@
+-Tester si la connexion est établie et si une session est déjà start avant de session start
+-Panier dans la bdd?
+-Espace d'administration
+-Faire qu'une seule page "produit" avec chaque produit produit/helico qu'on charge dynamiquement depuis la bdd
+-Formulaire d'ajout de produit pour l'espace d'admin
+-Gestion de rôle du coup

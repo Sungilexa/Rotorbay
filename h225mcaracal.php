@@ -1,5 +1,3 @@
-<?php
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +35,7 @@
                         </li>
                     </ul>
                     <p class="product-price"><strong>Prix :</strong> $<span id="item-price">22000000</span></p>
-                    <button id="caracalAddCart" class="btn btn-primary">Ajouter au panier</button>
+                    <button id="caracalAddCart" class="btn btn-primary" data-name="H225M Caracal" data-price="22000000">Ajouter au panier</button>
                 </div>
             </div>
         </div>

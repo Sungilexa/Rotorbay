@@ -1,76 +1,136 @@
 $(document).ready(function() {
-    // Generate a unique cart ID if not already present
-    var cartId = localStorage.getItem("cartId");
-    if (!cartId) {
-        cartId = Date.now().toString(); // Unique ID based on timestamp
-        localStorage.setItem("cartId", cartId);
-    }
+    console.log('Panier dynamique JS chargé');
+    updateCartDisplay();
 
-    // Cart object to store the items in the cart
-    let cart = {};
+    $(document).on('load', function() {
+        updateCartDisplay();
+    });
 
-    // Load cart from local storage if it exists
-    if (localStorage.getItem("cart")) {
-        cart = JSON.parse(localStorage.getItem("cart"));
-        renderCart();
-        calculateTotalPrice();
-    }
+    $(document).on('click', '.remove-item', function() {
+        let productName = $(this).data('name');
+        updateCart(productName, 0);
+    });
 
-    // Assign event listeners to the add to cart buttons on the product pages
+    $(document).on('change', '.update-quantity', function() {
+        let productName = $(this).data('name');
+        let newQuantity = $(this).val();
+        console.log(`Mise à jour du produit ${productName} avec la nouvelle quantité ${newQuantity}`);
+        updateCart(productName, newQuantity);
+    });
+
     $('#caracalAddCart').click(function() {
-        addToCart('H225M Caracal', 'caracalh225m.jpg', 22000000, 'h225mcaracal.php');
+        let productName = $(this).data('name');
+        let productPrice = $(this).data('price');
+        addToCart(productName, productPrice);
     });
 
-    $('#milmiAddCart').click(function() {
-        addToCart('Mil Mi-24 "Hind"', 'milmi24.jpg', 12000000, 'milmi24.php');
+    function updateCartDisplay() {
+        console.log('Mise à jour de l\'affichage du panier...');
+        $.ajax({
+            url: 'panier.php',
+            type: 'POST',
+            data: {action: 'display'},
+            success: function(response) {
+                console.log('Réponse de la requête GET du panier:', response);
+                let cartItems = JSON.parse(response);
+                let cartHtml = '';
+                let totalPrice = 0;
+                for (let item in cartItems) {
+                    let product = cartItems[item];
+                    cartHtml += `
+                        <tr>
+                            <td class="p-4">
+                                <div class="media align-items-center">
+                                    <img src="images/${item.toLowerCase().replace(/ /g, '')}.jpg" class="d-block ui-w-40 ui-bordered mr-4" alt="">
+                                    <div class="media-body">
+                                        <a href="#" class="d-block text-dark">${item}</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-right font-weight-semibold align-middle p-4">${(product.price / 100).toFixed(2)} $</td>
+                            <td class="align-middle p-4"><input type="number" class="form-control text-center update-quantity" data-name="${item}" value="${product.quantity}" min="1"></td>
+                            <td class="text-right font-weight-semibold align-middle p-4">${(product.price * product.quantity / 100).toFixed(2)} $</td>
+                            <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip close float-none text-danger remove-item" data-name="${item}" title="Remove">×</a></td>
+                        </tr>
+                    `;
+                    totalPrice += product.price * product.quantity;
+                }
+                $('#cart-items').html(cartHtml);
+                $('#total-price').text((totalPrice / 100).toFixed(2) + ' $');
+
+                if (totalPrice === 0) {
+                    $('#cart-table-container').hide();
+                    $('#empty-cart-message').show();
+                } else {
+                    $('#cart-table-container').show();
+                    $('#empty-cart-message').hide();
+                }
+            },
+            error: function(error) {
+                console.log('Erreur:', error);
+            }
+        });
+    }
+
+    function updateCart(productName, newQuantity) {
+        console.log(`Mise à jour du produit ${productName} avec la nouvelle quantité ${newQuantity}`);
+        $.ajax({
+            url: 'panier.php',
+            type: 'POST',
+            data: {
+                name: productName,
+                quantity: newQuantity,
+                action: 'update'
+            },
+            success: function(response) {
+                console.log('Panier mis à jour:', response);
+                updateCartDisplay();
+            },
+            error: function(error) {
+                console.log('Erreur:', error);
+            }
+        });
+    }
+
+    function addToCart(productName, productPrice) {
+        $.ajax({
+            url: 'panier.php',
+            type: 'POST',
+            data: {
+                name: productName,
+                price: productPrice,
+                action: 'add'
+            },
+            success: function(response) {
+                console.log('Produit ajouté au panier:', response);
+                updateCartDisplay();
+            },
+            error: function(error) {
+                console.log('Erreur:', error);
+            }
+        });
+    }
+
+    $('#checkout-button').click(function() {
+        $.ajax({
+            url: 'checkout.php',
+            type: 'POST',
+            data: {
+                cart: JSON.stringify(cart)
+            },
+            success: function(response) {
+                console.log('Commande passée:', response);
+                cart = {};
+                localStorage.removeItem('cart');
+                renderCart();
+                calculateTotalPrice();
+            },
+            error: function(error) {
+                console.log('Erreur:', error);
+            }
+        });
     });
 
-    $('#sikorskyAddCart').click(function() {
-        addToCart('Sikorsky S-92', 'sikorskys92.jpg', 27000000, 'sikorskys92.php');
-    });
-
-    // Function to add an item to the cart
-    function addToCart(name, image, price, link) {
-        const id = name.toLowerCase().replace(/ /g, '-').replace(/"/g, '');
-        if (cart[id]) {
-            cart[id].quantity += 1;
-        } else {
-            cart[id] = { name, image, price, quantity: 1, link };
-        }
-        localStorage.setItem("cart", JSON.stringify(cart));
-        renderCart();
-        calculateTotalPrice();
-    }
-
-    // Function to remove an item from the cart
-    function removeFromCart(id) {
-        delete cart[id];
-        localStorage.setItem("cart", JSON.stringify(cart));
-        renderCart();
-        calculateTotalPrice();
-    }
-
-    // Function to update the quantity of an item in the cart
-    function updateQuantity(id, newQuantity) {
-        if (cart[id]) {
-            cart[id].quantity = newQuantity;
-            localStorage.setItem("cart", JSON.stringify(cart));
-            renderCart();
-            calculateTotalPrice();
-        }
-    }
-
-    // Function to calculate the total price of the items in the cart
-    function calculateTotalPrice() {
-        let totalPrice = 0;
-        for (let id in cart) {
-            totalPrice += cart[id].price * cart[id].quantity;
-        }
-        $('#total-price').text(`$${(totalPrice / 100).toFixed(2)}`);
-        return totalPrice;
-    }
-
-    // Function to render the cart UI
     function renderCart() {
         const cartItems = $('#cart-items');
         cartItems.empty();
@@ -107,33 +167,4 @@ $(document).ready(function() {
             updateQuantity(id, newQuantity);
         });
     }
-
-    // Clear cart button functionality
-    $('#clear-cart').click(function() {
-        cart = {};
-        localStorage.setItem("cart", JSON.stringify(cart));
-        renderCart();
-        calculateTotalPrice();
-    });
-
-    // Checkout button functionality
-    $('#checkout-button').click(function() {
-        $.ajax({
-            url: 'checkout.php',
-            type: 'POST',
-            data: {
-                cart: JSON.stringify(cart)
-            },
-            success: function(response) {
-                console.log('Commande passée:', response);
-                cart = {};
-                localStorage.removeItem('cart');
-                renderCart();
-                calculateTotalPrice();
-            },
-            error: function(error) {
-                console.log('Erreur:', error);
-            }
-        });
-    });
 });

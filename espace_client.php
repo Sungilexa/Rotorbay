@@ -1,4 +1,6 @@
 <?php
+session_start(); // Démarrer la session
+
 include 'header.php';
 include 'db_connection.php';
 
@@ -24,6 +26,10 @@ if (isset($_SESSION['email'])) {
     } catch (Exception $e) {
         echo 'Erreur : ' . $e->getMessage();
     }
+} else {
+    // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+    header('Location: loginform.php');
+    exit();
 }
 ?>
 <!doctype html>

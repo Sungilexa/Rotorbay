@@ -1,3 +1,47 @@
+<?php
+session_start();
+
+if (($_SERVER['REQUEST_METHOD'] == 'POST') && ($_POST['action'] !== 'display')) {
+    $productName = $_POST['name'];
+    $productPrice = isset($_POST['price']) ? $_POST['price'] : 0;
+    $action = $_POST['action'];
+
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
+    }
+
+    switch ($action) {
+        case 'add':
+            if (isset($_SESSION['cart'][$productName])) {
+                $_SESSION['cart'][$productName]['quantity']++;
+            } else {
+                $_SESSION['cart'][$productName] = [
+                    'price' => $productPrice,
+                    'quantity' => 1
+                ];
+            }
+            break;
+
+        case 'update':
+            $newQuantity = $_POST['quantity'];
+            if ($newQuantity == 0) {
+                unset($_SESSION['cart'][$productName]);
+            } else {
+                $_SESSION['cart'][$productName]['quantity'] = $newQuantity;
+            }
+            break;
+    }
+
+    echo json_encode(['status' => 'success', 'cart' => $_SESSION['cart']]);
+    exit;
+}
+
+if (($_SERVER['REQUEST_METHOD'] == 'POST') && ($_POST['action'] == 'display')) {
+    echo json_encode(isset($_SESSION['cart']) ? $_SESSION['cart'] : []);
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +103,6 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-<script src="panierdynamique.js"></script>
+<script type="text/JavaScript" src="panierdynamique.js"></script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 <?php
+session_start(); // Démarrer la session avant toute sortie
+
 include 'db_connection.php'; // Inclure le fichier contenant la fonction Connexion
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,11 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['email'] = $email;
             $_SESSION['cart'] = []; // Initialiser le panier pour l'utilisateur
 
-            // Définir un cookie de session qui expire après 12 heures
-            session_set_cookie_params(12 * 60 * 60);
+            // Regénérer l'ID de session pour des raisons de sécurité
             session_regenerate_id(true);
 
-            echo 'success';
+            // Rediriger vers l'espace client
+            header('Location: accueil.php');
             exit();
         } else {
             echo 'Invalid email or password';
@@ -62,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" name="password" class="form-control" id="loginInputPassword" placeholder="Mot de passe">
                 </div>
                 <div class="submitDiv">
-                    <button type="button" class="btn btn-primary" id="loginFormBtn">Se connecter</button>
+                    <button type="submit" class="btn btn-primary" id="loginFormBtn">Se connecter</button>
                 </div>
             </form>
             <span class="msgPasInscrit">Pas encore inscrit ? Inscrivez-vous <a href="inscription.php">ici</a></span>
@@ -70,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <footer class="footer">
-            <p>© 2023 Bladespin aircraft inc.</p>
+        <p>© 2023 Bladespin aircraft inc.</p>
     </footer>
 </div>
 </body>
