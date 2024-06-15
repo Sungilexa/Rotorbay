@@ -11,18 +11,28 @@ if (session_status() == PHP_SESSION_NONE) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_ARGON2ID);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    if ($password !== $confirm_password) {
+        echo 'Passwords do not match';
+        exit();
+    }
+
+    $hashed_password = password_hash($password, PASSWORD_ARGON2ID);
 
     try {
         $db = Connexion();
         $stmt = $db->prepare("INSERT INTO utilisateur (email, password) VALUES (:email, :password)");
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':password', $hashed_password);
         $stmt->execute();
 
         // Connexion automatique de l'utilisateur
         $_SESSION['logged_in'] = true;
+        $_SESSION['user_id'] = $db->lastInsertId(); // Ajouter user_id à la session
         $_SESSION['email'] = $email;
+        $_SESSION['cart'] = []; // Initialiser le panier pour l'utilisateur
 
         // Regénérer l'ID de session pour des raisons de sécurité
         session_regenerate_id(true);
@@ -30,8 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo 'success';
         exit();
     } catch (Exception $e) {
-        // En cas d'erreur, rediriger vers inscription_echec.php
-        header('Location: inscription_echec.php');
+        echo 'Erreur : ' . $e->getMessage();
         exit();
     }
 }
@@ -57,25 +66,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form id="signupForm" method="post">
                 <div class="mailDiv">
                     <label for="enterSignupEmail">Adresse e-mail</label>
-                    <input type="email" name="email" class="form-control" id="enterSignupEmail" aria-describedby="emailHelp" placeholder="Entrez votre email">
+                    <input type="email" name="email" class="form-control" id="enterSignupEmail" aria-describedby="emailHelp" placeholder="Entrez votre email" required>
                     <small id="emailHelp" class="form-text text-muted">Votre adresse e-mail ne sera jamais divulguée.</small>
                 </div>
                 <div class="passDiv">
                     <label for="enterSignupPassword">Mot de passe</label>
-                    <input type="password" name="password" class="form-control" id="enterSignupPassword" placeholder="Mot de passe">
+                    <input type="password" name="password" class="form-control" id="enterSignupPassword" placeholder="Mot de passe" required>
                 </div>
                 <div class="passDiv">
                     <label for="confirmSignupPassword">Confirmez votre mot de passe</label>
-                    <input type="password" name="confirm_password" class="form-control" id="confirmSignupPassword" placeholder="Confirmez votre mot de passe">
+                    <input type="password" name="confirm_password" class="form-control" id="confirmSignupPassword" placeholder="Confirmez votre mot de passe" required>
                 </div>
                 <div class="submitDiv">
                     <button type="submit" class="btn btn-primary" id="SignupFormBtn">S'inscrire</button>
                 </div>
-                <?php if (isset($error_message)): ?>
-                    <div class="alert alert-danger mt-3"><?php echo $error_message; ?></div>
-                <?php endif; ?>
+                <div id="responseMessage"></div>
             </form>
-            <div id="responseMessage"></div>
+            <span class="msgDejaInscrit">Déjà inscrit ? Connectez-vous <a href="loginform.php">ici</a></span>
         </div>
     </div>
     <footer class="footer">

@@ -19,7 +19,7 @@ if (isset($_SESSION['email'])) {
         $userId = $user['idUtilisateur'];
 
         // Récupérer les commandes de l'utilisateur
-        $stmt = $db->prepare("SELECT numFacture, prixFacture, nomFacture FROM facture WHERE idUtilisateur = :userId");
+        $stmt = $db->prepare("SELECT numFacture, prixFacture, descriptionFacture FROM facture WHERE idUtilisateur = :userId");
         $stmt->bindParam(':userId', $userId);
         $stmt->execute();
         $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -61,7 +61,7 @@ if (isset($_SESSION['email'])) {
                             <tr>
                                 <td><?php echo htmlspecialchars($order['numFacture']); ?></td>
                                 <td><?php echo htmlspecialchars($order['prixFacture']); ?> $</td>
-                                <td><?php echo htmlspecialchars($order['nomFacture']); ?></td>
+                                <td><?php echo htmlspecialchars($order['descriptionFacture']); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>

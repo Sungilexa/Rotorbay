@@ -1,11 +1,13 @@
 $(document).ready(function(){
-    $('#SignupFormBtn').click(function(){
+    $('#SignupFormBtn').click(function(event){
+        event.preventDefault();
+        
         var email = $('#enterSignupEmail').val();
         var password = $('#enterSignupPassword').val();
         var confirmPassword = $('#confirmSignupPassword').val();
 
         if(password !== confirmPassword) {
-            alert("Les mots de passe ne correspondent pas");
+            $('#responseMessage').text("Les mots de passe ne correspondent pas").addClass("alert alert-danger");
             return;
         }
 
@@ -14,13 +16,14 @@ $(document).ready(function(){
             url: "inscription.php",
             data: {
                 email: email,
-                password: password
+                password: password,
+                confirm_password: confirmPassword
             },
             success: function(response) {
                 if (response.trim() === 'success') {
                     window.location.href = 'inscription_reussie.php';
                 } else {
-                    window.location.href = 'inscription_echec.php';
+                    $('#responseMessage').text(response).addClass("alert alert-danger");
                 }
             },
             error: function() {
@@ -29,7 +32,9 @@ $(document).ready(function(){
         });
     });
 
-    $('#loginFormBtn').click(function(){
+    $('#loginFormBtn').click(function(event){
+        event.preventDefault();
+        
         var email = $('#loginInputEmail').val();
         var password = $('#loginInputPassword').val();
 
@@ -44,39 +49,11 @@ $(document).ready(function(){
                 if (response.trim() === 'success') {
                     window.location.href = 'accueil.php';
                 } else {
-                    $('#responseMessage').text(response);
+                    $('#responseMessage').text(response).addClass("alert alert-danger");
                 }
             },
             error: function() {
-                $('#responseMessage').text("Erreur lors de la connexion");
-            }
-        });
-    });
-
-    $('#loginFormBtn').on('click', function() {
-        const email = $('#loginInputEmail').val();
-        const password = $('#loginInputPassword').val();
-
-        $.ajax({
-            url: 'loginform.php',
-            type: 'POST',
-            data: {
-                email: email,
-                password: password
-            },
-            success: function(response) {
-                if (response.trim() === 'success') {
-                    // Vider le panier en supprimant les éléments de la classe "card-container"
-                    $('.card-container').remove();
-
-                    // Redirection ou autre action après la connexion réussie
-                    window.location.href = 'accueil.php';
-                } else {
-                    $('#responseMessage').text(response);
-                }
-            },
-            error: function() {
-                $('#responseMessage').text('Erreur de connexion.');
+                $('#responseMessage').text("Erreur lors de la connexion").addClass("alert alert-danger");
             }
         });
     });

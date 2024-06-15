@@ -1,7 +1,6 @@
 <?php
-session_start(); // Démarrer la session avant toute sortie
-
-include 'db_connection.php'; // Inclure le fichier contenant la fonction Connexion
+session_start();
+include 'db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
@@ -17,15 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && password_verify($password, $user['password'])) {
             // Connexion réussie
             $_SESSION['logged_in'] = true;
-            $_SESSION['email'] = $email;
+            $_SESSION['user_id'] = $user['idutilisateur'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['role']; // Ajouter le rôle de l'utilisateur à la session
             $_SESSION['cart'] = []; // Initialiser le panier pour l'utilisateur
 
             // Regénérer l'ID de session pour des raisons de sécurité
             session_regenerate_id(true);
 
-            // Rediriger vers l'espace client
-            header('Location: accueil.php');
-            exit();
+            // Rediriger vers l'accueil
+            echo 'success';
         } else {
             echo 'Invalid email or password';
         }
@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>

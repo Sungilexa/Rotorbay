@@ -1,5 +1,9 @@
-<!-- catalogue.php -->
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+include 'db_connection.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,52 +22,8 @@
 
     <div class="catalogue">
       <h3>Catalogue des hélicoptères</h3>
-      <div class="card-deck">
-        <div class="card text-center">
-          <a href="milmi24.php">
-            <div class="card-header">
-              En stock
-            </div>
-            <img class="card-img-top" src="images/milmi24.jpg" alt="Card image">
-            <div class="card-body">
-              <p class="card-text text-muted">Hélicoptère de combat</p>
-              <a href="#"><h5 class="card-title">Mil-mi 24</h5></a>
-              <div class="card-footer">
-                15.000.000$
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="card text-center">
-          <a href="sikorskys92.php">
-            <div class="card-header">
-                En stock
-            </div>
-            <img class="card-img-top" src="images/sikorskys92.jpg" alt="Card image">
-            <div class="card-body">
-              <p class="card-text text-muted">Hélicoptère civil</p>
-              <a href="#"><h5 class="card-title">Sikorsky S-92</h5></a>
-              <div class="card-footer">
-                27.000.000$
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="card text-center">
-          <a href="h225mcaracal.php">
-            <div class="card-header">
-                En stock
-            </div>
-            <img class="card-img-top" src="images/caracalh225m.jpg" alt="Card image">
-            <div class="card-body">
-              <p class="card-text text-muted">Hélicoptère de combat</p>
-              <a href="#"><h5 class="card-title">H225M Caracal</h5></a>
-              <div class="card-footer">
-                22.000.000$
-              </div>
-            </div>
-          </a>
-        </div>
+      <div class="card-deck" id="product-cards">
+        <!-- Les cartes de produit seront insérées ici dynamiquement -->
       </div>
     </div>
         
@@ -71,6 +31,6 @@
         <p>© 2023 Bladespin aircraft inc.</p>
     </footer>
   </div>
-<script src="dynamique.js"></script>
+<script src="cataloguedynamique.js"></script>
 </body>
 </html>

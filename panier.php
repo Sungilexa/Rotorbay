@@ -1,10 +1,136 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();
+include 'db_connection.php';
 
-if (($_SERVER['REQUEST_METHOD'] == 'POST') && ($_POST['action'] !== 'display')) {
-    $productName = $_POST['name'];
-    $productPrice = isset($_POST['price']) ? $_POST['price'] : 0;
+function saveCartToDatabase($userId, $cart) {
+    try {
+        $db = Connexion();
+        $stmt = $db->prepare("SELECT * FROM panier WHERE idutilisateur = :userId");
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        $existingCart = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingCart) {
+            if (empty($cart)) {
+                $stmt = $db->prepare("DELETE FROM panier WHERE idPanier = :cartId");
+                $stmt->bindParam(':cartId', $existingCart['idPanier'], PDO::PARAM_INT);
+                $stmt->execute();
+            } else {
+                $stmt = $db->prepare("UPDATE panier SET produits = :products WHERE idPanier = :cartId");
+                $products = json_encode($cart);
+                $stmt->bindParam(':products', $products, PDO::PARAM_STR);
+                $stmt->bindParam(':cartId', $existingCart['idPanier'], PDO::PARAM_INT);
+                $stmt->execute();
+            }
+        } else {
+            if (!empty($cart)) {
+                $stmt = $db->prepare("INSERT INTO panier (idutilisateur, produits) VALUES (:userId, :products)");
+                $products = json_encode($cart);
+                $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+                $stmt->bindParam(':products', $products, PDO::PARAM_STR);
+                $stmt->execute();
+            }
+        }
+    } catch (Exception $e) {
+        error_log('Erreur lors de la sauvegarde du panier en base de données: ' . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la sauvegarde du panier en base de données']);
+        exit;
+    }
+}
+
+function loadCartFromDatabase($userId) {
+    try {
+        $db = Connexion();
+        $stmt = $db->prepare("SELECT * FROM panier WHERE idutilisateur = :userId");
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        $cart = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $cart ? json_decode($cart['produits'], true) : [];
+    } catch (Exception $e) {
+        error_log('Erreur lors du chargement du panier depuis la base de données: ' . $e->getMessage());
+        return [];
+    }
+}
+
+function createInvoice($userId, $cart) {
+    try {
+        $db = Connexion();
+        $totalPrice = 0;
+        $description = '';
+
+        foreach ($cart as $productName => $product) {
+            $stmt = $db->prepare("SELECT stock FROM produit WHERE nom = :nom");
+            $stmt->bindParam(':nom', $productName);
+            $stmt->execute();
+            $productData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$productData || $product['quantity'] > $productData['stock']) {
+                echo json_encode(['status' => 'error', 'message' => 'Stock insuffisant pour le produit: ' . $productName]);
+                exit;
+            }
+
+            $totalPrice += $product['price'] * $product['quantity'];
+            $description .= "$productName: {$product['quantity']} x {$product['price']} $\n";
+
+            // Update stock
+            $newStock = $productData['stock'] - $product['quantity'];
+            $stmt = $db->prepare("UPDATE produit SET stock = :stock WHERE nom = :nom");
+            $stmt->bindParam(':stock', $newStock, PDO::PARAM_INT);
+            $stmt->bindParam(':nom', $productName, PDO::PARAM_STR);
+            $stmt->execute();
+        }
+
+        $invoiceName = 'Facture_' . uniqid();
+        $invoiceNumber = uniqid();
+
+        $stmt = $db->prepare("INSERT INTO facture (descriptionFacture, numFacture, prixFacture, idutilisateur) VALUES (:descriptionFacture, :numFacture, :prixFacture, :userId)");
+        $stmt->bindParam(':descriptionFacture', $description, PDO::PARAM_STR);
+        $stmt->bindParam(':numFacture', $invoiceNumber, PDO::PARAM_STR);
+        $stmt->bindParam(':prixFacture', $totalPrice, PDO::PARAM_INT);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $stmt = $db->prepare("DELETE FROM panier WHERE idutilisateur = :userId");
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $_SESSION['cart'] = [];
+    } catch (Exception $e) {
+        error_log('Erreur lors de la création de la facture: ' . $e->getMessage());
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la création de la facture: ' . $e->getMessage()]);
+        exit;
+    }
+}
+
+if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
+    header('Location: loginform.php');
+    exit;
+}
+
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Utilisateur non identifié']);
+    exit;
+}
+
+$userId = $_SESSION['user_id'];
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'];
+    
+    if ($action === 'checkout') {
+        createInvoice($userId, $_SESSION['cart']);
+        echo json_encode(['status' => 'success', 'message' => 'Facture créée avec succès']);
+        exit;
+    }
+
+    if (isset($_POST['name']) && isset($_POST['price'])) {
+        $productName = $_POST['name'];
+        $productPrice = $_POST['price'];
+    }
 
     if (!isset($_SESSION['cart'])) {
         $_SESSION['cart'] = [];
@@ -12,9 +138,9 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') && ($_POST['action'] !== 'display')) 
 
     switch ($action) {
         case 'add':
-            if (isset($_SESSION['cart'][$productName])) {
+            if (isset($productName) && isset($_SESSION['cart'][$productName])) {
                 $_SESSION['cart'][$productName]['quantity']++;
-            } else {
+            } else if (isset($productName)) {
                 $_SESSION['cart'][$productName] = [
                     'price' => $productPrice,
                     'quantity' => 1
@@ -23,24 +149,44 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') && ($_POST['action'] !== 'display')) 
             break;
 
         case 'update':
-            $newQuantity = $_POST['quantity'];
-            if ($newQuantity == 0) {
-                unset($_SESSION['cart'][$productName]);
-            } else {
-                $_SESSION['cart'][$productName]['quantity'] = $newQuantity;
+            if (isset($_POST['name']) && isset($_POST['quantity'])) {
+                $productName = $_POST['name'];
+                $newQuantity = $_POST['quantity'];
+                if ($newQuantity == 0) {
+                    unset($_SESSION['cart'][$productName]);
+                } else {
+                    $_SESSION['cart'][$productName]['quantity'] = $newQuantity;
+                }
             }
             break;
     }
 
-    echo json_encode(['status' => 'success', 'cart' => $_SESSION['cart']]);
+    // Update the cart with prices to ensure the response contains full product details
+    $updatedCart = $_SESSION['cart'];
+    foreach ($updatedCart as $name => $details) {
+        if (!isset($details['price'])) {
+            $updatedCart[$name]['price'] = isset($productPrice) ? $productPrice : 0;
+        }
+    }
+
+    saveCartToDatabase($userId, $_SESSION['cart']);
+    echo json_encode(['status' => 'success', 'cart' => $updatedCart]);
     exit;
 }
 
-if (($_SERVER['REQUEST_METHOD'] == 'POST') && ($_POST['action'] == 'display')) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'display') {
     echo json_encode(isset($_SESSION['cart']) ? $_SESSION['cart'] : []);
     exit;
 }
+
+$_SESSION['cart'] = loadCartFromDatabase($userId);
 ?>
+
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">

@@ -1,6 +1,9 @@
--Tester si la connexion est établie et si une session est déjà start avant de session start
--Panier dans la bdd?
--Espace d'administration
--Faire qu'une seule page "produit" avec chaque produit produit/helico qu'on charge dynamiquement depuis la bdd
--Formulaire d'ajout de produit pour l'espace d'admin
--Gestion de rôle du coup
+-Front panier
+-Front facture
+-demander à quoi sert create index idutilisateur on panier dans la bdd
+-Documentation
+-Fiche E5
+-Post sur le portfolio
+-Commit & push git
+-Test sur le pc portable
+-Fin

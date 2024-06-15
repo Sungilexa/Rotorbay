@@ -1,170 +1,155 @@
 $(document).ready(function() {
-    console.log('Panier dynamique JS chargé');
-    updateCartDisplay();
+    function updateCartDisplay(cart) {
+        const $cartItems = $('#cart-items');
+        const $totalPrice = $('#total-price');
+        $cartItems.empty();
+        let totalPrice = 0;
 
-    $(document).on('load', function() {
-        updateCartDisplay();
-    });
+        if ($.isEmptyObject(cart)) {
+            $('#cart-table').hide();
+            $('#empty-cart-message').show();
+        } else {
+            $('#cart-table').show();
+            $('#empty-cart-message').hide();
 
-    $(document).on('click', '.remove-item', function() {
-        let productName = $(this).data('name');
-        updateCart(productName, 0);
-    });
+            $.each(cart, function(productName, productDetails) {
+                if (productDetails && productDetails.price && productDetails.quantity) {
+                    const productPrice = parseFloat(productDetails.price); // Convert to number
+                    const productTotal = productPrice * productDetails.quantity;
+                    totalPrice += productTotal;
+
+                    // Récupérer l'image et le type du produit depuis la base de données
+                    $.ajax({
+                        url: 'getProductByName.php',
+                        type: 'GET',
+                        data: { productName: productName },
+                        success: function(response) {
+                            const productData = typeof response === 'string' ? JSON.parse(response) : response;
+                            const imageSrc = productData.lienImage ? productData.lienImage : 'images/default.png'; // Image par défaut si pas d'image
+                            const productType = productData.type ? productData.type : '';
+
+                            const cartRow = `
+                                <tr>
+                                    <td class="product-details py-3 px-4">
+                                        <img id="productImage" src="${imageSrc}" alt="${productName}">
+                                        <span class="product-name">${productName} - ${productType}</span>
+                                    </td>
+                                    <td class="text-right py-3 px-4">${productPrice.toFixed(2)}$</td>
+                                    <td class="text-center py-3 px-4">
+                                        <input type="number" class="form-control text-center update-quantity" data-name="${productName}" value="${productDetails.quantity}">
+                                    </td>
+                                    <td class="text-right py-3 px-4">${productTotal.toFixed(2)}$</td>
+                                    <td class="text-center align-middle py-3 px-0">
+                                        <a href="#" class="remove-product" data-name="${productName}"><i class="ion ion-md-trash"></i></a>
+                                    </td>
+                                </tr>
+                            `;
+                            $cartItems.append(cartRow);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Erreur lors de la récupération du produit:', error);
+                        }
+                    });
+                } else {
+                    console.error(`Invalid product details for ${productName}:`, productDetails);
+                }
+            });
+        }
+
+        $totalPrice.text(totalPrice.toFixed(2) + '$');
+    }
+
+    function fetchCart() {
+        $.ajax({
+            url: 'panier.php',
+            type: 'POST',
+            data: { action: 'display' },
+            success: function(data) {
+                console.log('Réponse du serveur (brute):', data); // Afficher la réponse brute
+                try {
+                    const response = typeof data === 'string' ? JSON.parse(data) : data;
+                    if (response.status === 'success') {
+                        updateCartDisplay(response.cart);
+                    } else {
+                        console.error('Erreur lors de la récupération du panier:', response.message);
+                    }
+                } catch (e) {
+                    console.error('Erreur lors de l\'analyse du JSON:', e);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la récupération du panier:', error);
+            }
+        });
+    }
+
+    function updateCart(productName, quantity) {
+        $.ajax({
+            url: 'panier.php',
+            type: 'POST',
+            data: {
+                action: 'update',
+                name: productName,
+                quantity: quantity
+            },
+            success: function(data) {
+                console.log('Réponse du serveur (brute):', data); // Afficher la réponse brute
+                try {
+                    const response = typeof data === 'string' ? JSON.parse(data) : data;
+                    if (response.status === 'success') {
+                        updateCartDisplay(response.cart);
+                    } else {
+                        console.error('Erreur lors de la mise à jour du panier:', response.message);
+                    }
+                } catch (e) {
+                    console.error('Erreur lors de l\'analyse du JSON:', e);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la mise à jour du panier:', error);
+            }
+        });
+    }
 
     $(document).on('change', '.update-quantity', function() {
-        let productName = $(this).data('name');
-        let newQuantity = $(this).val();
-        console.log(`Mise à jour du produit ${productName} avec la nouvelle quantité ${newQuantity}`);
+        const productName = $(this).data('name');
+        const newQuantity = $(this).val();
         updateCart(productName, newQuantity);
     });
 
-    $('#caracalAddCart').click(function() {
-        let productName = $(this).data('name');
-        let productPrice = $(this).data('price');
-        addToCart(productName, productPrice);
+    $(document).on('click', '.remove-product', function(e) {
+        e.preventDefault();
+        const productName = $(this).data('name');
+        updateCart(productName, 0);
     });
-
-    function updateCartDisplay() {
-        console.log('Mise à jour de l\'affichage du panier...');
-        $.ajax({
-            url: 'panier.php',
-            type: 'POST',
-            data: {action: 'display'},
-            success: function(response) {
-                console.log('Réponse de la requête GET du panier:', response);
-                let cartItems = JSON.parse(response);
-                let cartHtml = '';
-                let totalPrice = 0;
-                for (let item in cartItems) {
-                    let product = cartItems[item];
-                    cartHtml += `
-                        <tr>
-                            <td class="p-4">
-                                <div class="media align-items-center">
-                                    <img src="images/${item.toLowerCase().replace(/ /g, '')}.jpg" class="d-block ui-w-40 ui-bordered mr-4" alt="">
-                                    <div class="media-body">
-                                        <a href="#" class="d-block text-dark">${item}</a>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-right font-weight-semibold align-middle p-4">${(product.price / 100).toFixed(2)} $</td>
-                            <td class="align-middle p-4"><input type="number" class="form-control text-center update-quantity" data-name="${item}" value="${product.quantity}" min="1"></td>
-                            <td class="text-right font-weight-semibold align-middle p-4">${(product.price * product.quantity / 100).toFixed(2)} $</td>
-                            <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip close float-none text-danger remove-item" data-name="${item}" title="Remove">×</a></td>
-                        </tr>
-                    `;
-                    totalPrice += product.price * product.quantity;
-                }
-                $('#cart-items').html(cartHtml);
-                $('#total-price').text((totalPrice / 100).toFixed(2) + ' $');
-
-                if (totalPrice === 0) {
-                    $('#cart-table-container').hide();
-                    $('#empty-cart-message').show();
-                } else {
-                    $('#cart-table-container').show();
-                    $('#empty-cart-message').hide();
-                }
-            },
-            error: function(error) {
-                console.log('Erreur:', error);
-            }
-        });
-    }
-
-    function updateCart(productName, newQuantity) {
-        console.log(`Mise à jour du produit ${productName} avec la nouvelle quantité ${newQuantity}`);
-        $.ajax({
-            url: 'panier.php',
-            type: 'POST',
-            data: {
-                name: productName,
-                quantity: newQuantity,
-                action: 'update'
-            },
-            success: function(response) {
-                console.log('Panier mis à jour:', response);
-                updateCartDisplay();
-            },
-            error: function(error) {
-                console.log('Erreur:', error);
-            }
-        });
-    }
-
-    function addToCart(productName, productPrice) {
-        $.ajax({
-            url: 'panier.php',
-            type: 'POST',
-            data: {
-                name: productName,
-                price: productPrice,
-                action: 'add'
-            },
-            success: function(response) {
-                console.log('Produit ajouté au panier:', response);
-                updateCartDisplay();
-            },
-            error: function(error) {
-                console.log('Erreur:', error);
-            }
-        });
-    }
 
     $('#checkout-button').click(function() {
         $.ajax({
-            url: 'checkout.php',
+            url: 'panier.php',
             type: 'POST',
             data: {
-                cart: JSON.stringify(cart)
+                action: 'checkout'
             },
-            success: function(response) {
-                console.log('Commande passée:', response);
-                cart = {};
-                localStorage.removeItem('cart');
-                renderCart();
-                calculateTotalPrice();
+            success: function(data) {
+                console.log('Réponse du serveur (brute):', data); // Afficher la réponse brute
+                try {
+                    const response = typeof data === 'string' ? JSON.parse(data) : data;
+                    if (response.status === 'success') {
+                        alert('Facture créée avec succès');
+                        fetchCart(); // Re-fetch the cart to reflect the empty cart
+                    } else {
+                        alert(response.message || 'Erreur lors de la création de la facture');
+                    }
+                } catch (e) {
+                    console.error('Erreur lors de l\'analyse du JSON:', e);
+                }
             },
-            error: function(error) {
-                console.log('Erreur:', error);
+            error: function(xhr, status, error) {
+                console.error('Erreur lors de la création de la facture:', error);
+                alert('Erreur lors de la création de la facture');
             }
         });
     });
 
-    function renderCart() {
-        const cartItems = $('#cart-items');
-        cartItems.empty();
-        for (let id in cart) {
-            const item = cart[id];
-            const itemElement = $(`
-                <tr>
-                    <td class="p-4">
-                        <div class="media d-flex align-items-center">
-                            <img src="images/${item.image}" class="d-block ui-w-200 ui-bordered mr-3" alt="">
-                            <div class="media-body">
-                                <a href="${item.link}" class="d-block text-white">${item.name}</a>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="text-right font-weight-semibold align-middle p-4 text-white">$${(item.price / 100).toFixed(2)}</td>
-                    <td class="align-middle p-4"><input type="number" class="form-control text-center update-quantity" data-id="${id}" value="${item.quantity}" min="1"></td>
-                    <td class="text-right font-weight-semibold align-middle p-4 text-white">$${(item.price * item.quantity / 100).toFixed(2)}</td>
-                    <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip close float-none text-danger remove-item" data-id="${id}" title="Remove">×</a></td>
-                </tr>
-            `);
-            cartItems.append(itemElement);
-        }
-
-        // Assign event listeners for remove and update quantity buttons
-        $('.remove-item').click(function() {
-            const id = $(this).data('id');
-            removeFromCart(id);
-        });
-
-        $('.update-quantity').change(function() {
-            const id = $(this).data('id');
-            const newQuantity = parseInt($(this).val());
-            updateQuantity(id, newQuantity);
-        });
-    }
+    fetchCart();
 });

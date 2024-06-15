@@ -12,48 +12,41 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 body {
     font-style: sans-serif;
-}
-
-a {
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: none;
+    background: url('images/backgroundadmin.jpg') no-repeat center center fixed;
+    background-size: cover;
 }
 
 .container {
-  position: relative;
-  min-height: 100vh; /* Utiliser la hauteur minimale complète de la fenêtre */
-  width: 100vw; /* Utiliser la largeur complète de la fenêtre */
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('images/Background.jpg') no-repeat center center;
-  background-size: cover; /* Couvrir toute la fenêtre */
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Centrer verticalement */
-  align-items: center; /* Centrer horizontalement */
-  margin: 0;
-  max-width: 100% !important;
+    position: relative;
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+.admin-content {
+    width: 100%;
+    margin: 80px auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    color: #ffffff;
+    text-align: center;
 }
 
 .catalogue {
     max-width: 1000px;
     width: 100%;
-    margin: 80px auto; /* Assurer un espace en haut pour le header fixe */
+    margin: 20px auto;
     padding: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
-    color: #ffffff;
-}
-
-.catalogue h3 {
-    text-align: center;
-    margin-bottom: 20px;
 }
 
 .card-deck {
@@ -61,7 +54,6 @@ a:hover {
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-    
 }
 
 .card {
@@ -71,7 +63,6 @@ a:hover {
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-    
 }
 
 .card:hover {
@@ -95,15 +86,11 @@ a:hover {
     color: gray;
 }
 
-.text-muted {
-    font-size: 15px;
-}
-
 .card-footer {
     font-weight: bold;
     font-size: 18px;
-    background-color: #fff!important;
-    border-top-color: #fff!important;
+    background-color: #fff !important;
+    border-top-color: #fff !important;
 }
 
 .card-body {
@@ -128,8 +115,6 @@ a:hover {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #ffffff;
 }
 
 .footer p {
@@ -143,42 +128,42 @@ nav {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 60px; /* Hauteur fixe pour le header */
-    background-color: rgba(0, 0, 0, 0.5); /* Pour plus de visibilité */
-    position: fixed; /* Fixer le header en haut de la page */
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
     top: 0;
-    z-index: 1000; /* S'assurer que le header est au-dessus des autres éléments */
-    padding: 0 20px; /* Assurer un padding horizontal cohérent */
-    left: 0; /* S'assurer que le header commence à 0 sur la gauche */
+    z-index: 1000;
+    padding: 0 20px;
+    left: 0;
 }
 
 nav .logo {
-    max-height: 50px; /* Assurer que le logo ne dépasse pas du header */
+    max-height: 50px;
     cursor: pointer;
 }
 
 nav .cart {
-    max-height: 30px; /* Taille du panier ajustée pour le header */
+    max-height: 30px;
     cursor: pointer;
 }
 
 nav ul {
     display: flex;
-    justify-content: center; /* Centrer les éléments de la liste */
+    justify-content: center;
     text-align: center;
     list-style-type: none;
     margin: 0;
     padding: 0;
-    flex: 1; /* Permettre à la liste de prendre l'espace disponible */
+    flex: 1;
 }
 
 ul li {
-    margin: 0 20px; /* Ajuster l'écart entre les éléments */
+    margin: 0 20px;
 }
 
 ul li a {
     position: relative;
-    padding: 10px 15px; /* Ajuster le padding des liens */
+    padding: 10px 15px;
     text-decoration: none;
     color: #fff;
     font-size: 16px;

@@ -13,5 +13,11 @@
         <p>Redirection...</p>
     </div>
 </div>
+<script>
+    // Redirige vers loginform.php après 2 secondes (2000 millisecondes)
+    setTimeout(function() {
+        window.location.href = 'loginform.php';
+    }, 2000);
+</script>
 </body>
 </html>
