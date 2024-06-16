@@ -12,7 +12,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 body {
@@ -22,12 +22,10 @@ body {
 }
 
 .container {
-    position: relative;
     min-height: 100vh;
     width: 100vw;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     padding: 0;
 }
@@ -40,6 +38,7 @@ body {
     border-radius: 5px;
     color: #ffffff;
     text-align: center;
+    flex: 1 0 auto;  /* Allow it to grow and take space */
 }
 
 .catalogue {
@@ -111,10 +110,10 @@ body {
 .footer {
     padding: 20px;
     text-align: center;
-    position: fixed;
-    bottom: 0;
-    left: 0;
     width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    flex-shrink: 0; /* Ensure it doesn't shrink and stays at the bottom */
 }
 
 .footer p {

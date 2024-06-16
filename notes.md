@@ -1,5 +1,3 @@
--Front panier
--Front facture
 -demander à quoi sert create index idutilisateur on panier dans la bdd
 -Documentation
 -Fiche E5

@@ -152,14 +152,20 @@ ul li a:hover::after {
 }
 
 .footer {
-    padding: 20px;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #ffffff;
+  padding: 20px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+}
+
+.footer p {
+  margin: 0;
+  color: #ffffff;
+  font-size: 14px;
 }
 
 .empty-cart-message {

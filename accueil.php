@@ -19,7 +19,6 @@
             <h1>ROTORBAY</h1>
             <h4>En apesanteur, venez profiter du savoir-faire des ingénieurs Rotorbay...</h4>
             <div class="row">
-                <a href="contact.php">Prendre rendez-vous</a>
                 <a href="catalogue.php">Voir les Hélicoptères  <span>&#x27f6</span></a>
                 <span>
                     Venez découvrir nos hélicoptères d'exception<br />
